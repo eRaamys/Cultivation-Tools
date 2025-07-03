@@ -213,7 +213,7 @@
                 
                 // Final ATBM Percentage
                 const finalATBM = wingCoeff * baseResult * 100;
-                atbmFinalResult.textContent = `${finalATBM.toFixed(3)}%`;
+                atbmFinalResult.textContent = `${finalATBM.toFixed(4)}%`;
 
             }
 
@@ -232,7 +232,7 @@
                 if (baseResult !== 0) {
                     wingCoeff = (atbmPercent / 100) / baseResult;
                 }
-                coeffFinalResult.textContent = wingCoeff.toFixed(3);
+                coeffFinalResult.textContent = wingCoeff.toFixed(4);
 
             }
 
