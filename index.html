@@ -147,9 +147,11 @@
         import { getFirestore, doc, runTransaction, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // web app's Firebase configuration.
+        // Your web app's Firebase configuration.
+        // It is SAFE to have this in public code IF you secure your API key (see instructions).
         const firebaseConfig = {
-          apiKey: "AIzaSyCCsy0wZSaOI8H3XhkpOIw_JTd61We15EY",
+          apiKey: "AIzaSyCCsy0wZSaOI8H3XhkpOIw_JTd61We15EY", // This is your public API key
+          authDomain: "eraamy-ac9f4.firebaseapp.com",
           projectId: "eraamy-ac9f4",
           storageBucket: "eraamy-ac9f4.appspot.com",
           messagingSenderId: "554835178988",
