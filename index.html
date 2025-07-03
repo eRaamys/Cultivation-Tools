@@ -150,30 +150,47 @@
     <script type="module">
         // Import functions from the Firebase SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, doc, runTransaction, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, runTransaction, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // IMPORTANT!
-        const firebaseConfig = {
-            apiKey: "AIzaSyDxjVnWCz2QUGzpAXhItVr_8al4jfLuozk",
-            authDomain: "eraamy-ac9f4.firebaseapp.com",
-            projectId: "eraamy-ac9f4",
-            storageBucket: "eraamy-ac9f4.appspot.com",
-            messagingSenderId: "554835178988",
-            appId: "1:554835178988:web:2404696e93fbbd2dba3cc9",
-            measurementId: "G-8R81WMZFRP"
-        };
+        // --- SECURE FIREBASE INITIALIZATION ---
+        // This code safely initializes Firebase without exposing keys in the source code.
+        // It uses special variables provided by the environment.
+        let app, db, auth;
+        try {
+            const firebaseConfig = typeof __firebase_config !== 'undefined' 
+                ? JSON.parse(__firebase_config)
+                : undefined;
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+            if (!firebaseConfig) {
+                throw new Error("Firebase config not found.");
+            }
+
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            setLogLevel('debug'); // Optional: for detailed logs
+        } catch (e) {
+            console.error("Fatal Error: Could not initialize Firebase.", e);
+            // Display an error on the page
+            const counterElement = document.getElementById('visitor-count');
+            if (counterElement) {
+                counterElement.textContent = "Initialization Failed.";
+            }
+        }
 
         // --- VISITOR COUNTER LOGIC ---
         async function initializeCounter() {
+            // Ensure Firebase was initialized before proceeding
+            if (!auth || !db) return; 
+
             try {
-                // Sign in anonymously to interact with Firestore
-                await signInAnonymously(auth);
+                // Sign in securely using the token provided by the environment, or fall back to anonymous.
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
 
                 const counterRef = doc(db, "visitors", "site-counter");
 
@@ -200,12 +217,11 @@
             }
         }
 
-        // --- CALCULATOR LOGIC (from previous version) ---
+        // --- CALCULATOR LOGIC ---
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize the visitor counter first
             initializeCounter();
 
-            // --- DATA & CONSTANTS ---
             const rarityData = {
                 'scarce': { value: 6, name: 'Scarce' },
                 'epic': { value: 7, name: 'Epic' },
@@ -215,9 +231,8 @@
                 'eternal': { value: 11, name: 'Eternal' },
                 'celestial': { value: 12, name: 'Celestial' }
             };
-            const LEVEL_MULTIPLIER = 0.0000555555555555556; // (1/18000)
+            const LEVEL_MULTIPLIER = 0.0000555555555555556;
 
-            // --- ELEMENT SELECTORS ---
             const atbmCoeffInput = document.getElementById('atbm-wing-coeff');
             const atbmLevelInput = document.getElementById('atbm-level');
             const atbmRaritySelect = document.getElementById('atbm-rarity');
@@ -231,6 +246,7 @@
             function populateRaritySelects() {
                 const selects = [atbmRaritySelect, coeffRaritySelect];
                 selects.forEach(select => {
+                    if (!select) return;
                     for (const key in rarityData) {
                         const option = document.createElement('option');
                         option.value = key;
@@ -238,8 +254,8 @@
                         select.appendChild(option);
                     }
                 });
-                atbmRaritySelect.value = 'scarce';
-                coeffRaritySelect.value = 'scarce';
+                if (atbmRaritySelect) atbmRaritySelect.value = 'scarce';
+                if (coeffRaritySelect) coeffRaritySelect.value = 'scarce';
             }
 
             function calculateBaseFormula(level, rarityValue) {
