@@ -137,55 +137,10 @@
         <div class="text-center mt-8">
             <p class="text-red-400 mt-2 text-center mb-2">Warning. best way to get accurate stats of scarce wing its trade wing to low level alts as it would give 3 decimal instead of 1 decimal such on picture</p>
             <img class="mx-auto" src="https://cdn.discordapp.com/attachments/1390174747916238949/1390362631713329162/image.png?ex=6867fb9b&is=6866aa1b&hm=3c7608c2ab58154746bc3352e8fe772e24c22530fe0673cb9daf2d84dd38ea0d&" />
-            <p class="text-gray-500 text-sm mt-4">Total Visitors: <span id="visitor-count" class="font-bold text-gray-400">Loading...</span></p>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, doc, runTransaction, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
-        // Your web app's Firebase configuration.
-        // It is SAFE to have this in public code IF you secure your API key (see instructions).
-        const firebaseConfig = {
-          apiKey: "AIzaSyCCsy0wZSaOI8H3XhkpOIw_JTd61We15EY", // This is your public API key
-          authDomain: "eraamy-ac9f4.firebaseapp.com",
-          projectId: "eraamy-ac9f4",
-          storageBucket: "eraamy-ac9f4.appspot.com",
-          messagingSenderId: "554835178988",
-          appId: "1:554835178988:web:2404696e93fbbd2dba3cc9"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        async function initializeCounter() {
-            try {
-                await signInAnonymously(auth);
-                const counterRef = doc(db, "visitors", "site-counter");
-                await runTransaction(db, async (transaction) => {
-                    const counterDoc = await transaction.get(counterRef);
-                    if (!counterDoc.exists()) {
-                        transaction.set(counterRef, { count: 1 });
-                    } else {
-                        const newCount = counterDoc.data().count + 1;
-                        transaction.update(counterRef, { count: newCount });
-                    }
-                });
-                onSnapshot(counterRef, (doc) => {
-                    const count = doc.exists() ? doc.data().count : 0;
-                    document.getElementById('visitor-count').textContent = count.toLocaleString('id-ID');
-                });
-            } catch (error) {
-                console.error("Error with visitor counter:", error);
-                document.getElementById('visitor-count').textContent = 'Error';
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             initializeCounter();
             const rarityData = {
