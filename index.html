@@ -138,12 +138,74 @@
                 </div>
             </div>
         </div>
-        <p class="text-red-400 mt-2 text-center mb-8">Warning. best way to get accurate stats of scarce wing its trade wing to low level alts as it would give 3 decimal instead of 1 decimal such on picture</p>
-        <img class="mx-auto" src="https://cdn.discordapp.com/attachments/1390174747916238949/1390362631713329162/image.png?ex=6867fb9b&is=6866aa1b&hm=3c7608c2ab58154746bc3352e8fe772e24c22530fe0673cb9daf2d84dd38ea0d&" />
+        <div class="text-center mt-8">
+            <p class="text-red-400 mt-2 text-center mb-2">Warning. best way to get accurate stats of scarce wing its trade wing to low level alts as it would give 3 decimal instead of 1 decimal such on picture</p>
+            <img class="mx-auto" src="https://cdn.discordapp.com/attachments/1390174747916238949/1390362631713329162/image.png?ex=6867fb9b&is=6866aa1b&hm=3c7608c2ab58154746bc3352e8fe772e24c22530fe0673cb9daf2d84dd38ea0d&" />
+            <!-- Visitor Counter Display -->
+            <p class="text-gray-500 text-sm mt-4">Total Visitors: <span id="visitor-count" class="font-bold text-gray-400">Loading...</span></p>
+        </div>
     </div>
 
-    <script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import functions from the Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, doc, runTransaction, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // IMPORTANT: Your web app's Firebase configuration
+        // You need to create a Firebase project and get this configuration.
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxjVnWCz2QUGzpAXhItVr_8al4jfLuozk",
+            authDomain: "eraamy-ac9f4.firebaseapp.com",
+            projectId: "eraamy-ac9f4",
+            storageBucket: "eraamy-ac9f4.firebasestorage.app",
+            messagingSenderId: "554835178988",
+            appId: "1:554835178988:web:2404696e93fbbd2dba3cc9",
+            measurementId: "G-8R81WMZFRP"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // --- VISITOR COUNTER LOGIC ---
+        async function initializeCounter() {
+            try {
+                // Sign in anonymously to interact with Firestore
+                await signInAnonymously(auth);
+
+                const counterRef = doc(db, "visitors", "site-counter");
+
+                // Use a transaction to safely increment the counter
+                await runTransaction(db, async (transaction) => {
+                    const counterDoc = await transaction.get(counterRef);
+                    if (!counterDoc.exists()) {
+                        transaction.set(counterRef, { count: 1 });
+                    } else {
+                        const newCount = counterDoc.data().count + 1;
+                        transaction.update(counterRef, { count: newCount });
+                    }
+                });
+
+                // Listen for real-time updates to the counter
+                onSnapshot(counterRef, (doc) => {
+                    const count = doc.exists() ? doc.data().count : 0;
+                    document.getElementById('visitor-count').textContent = count.toLocaleString('id-ID');
+                });
+
+            } catch (error) {
+                console.error("Error with visitor counter:", error);
+                document.getElementById('visitor-count').textContent = 'Error';
+            }
+        }
+
+        // --- CALCULATOR LOGIC (from previous version) ---
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize the visitor counter first
+            initializeCounter();
+
             // --- DATA & CONSTANTS ---
             const rarityData = {
                 'scarce': { value: 6, name: 'Scarce' },
@@ -167,12 +229,6 @@
             const coeffRaritySelect = document.getElementById('coeff-rarity');
             const coeffFinalResult = document.getElementById('coeff-final-result');
 
-
-            // --- FUNCTIONS ---
-
-            /**
-             * Populates select dropdowns with rarity options.
-             */
             function populateRaritySelects() {
                 const selects = [atbmRaritySelect, coeffRaritySelect];
                 selects.forEach(select => {
@@ -183,19 +239,12 @@
                         select.appendChild(option);
                     }
                 });
-                // Set default to Scarce
                 atbmRaritySelect.value = 'scarce';
                 coeffRaritySelect.value = 'scarce';
             }
 
-            /**
-             * Calculates the core part of the formula, common to many calculations.
-             * @param {number} level - The wing level.
-             * @param {number} rarityValue - The numerical value of the rarity.
-             * @returns {number} - The result of the base calculation.
-             */
             function calculateBaseFormula(level, rarityValue) {
-                if (rarityValue <= 5) return 0; // Avoid division by zero or negative results from formula logic
+                if (rarityValue <= 5) return 0;
                 const term1 = 0.05 + (level - 1) * LEVEL_MULTIPLIER;
                 const term2 = 1 + (rarityValue - 5) * 0.1;
                 const term3 = 6.25;
@@ -203,48 +252,33 @@
                 return term1 * term2 * term3 * term4;
             }
 
-            /**
-             * Calculates and updates the Wing ATBM Calculation results.
-             */
             function calculateATBM() {
                 const wingCoeff = parseFloat(atbmCoeffInput.value) || 0;
                 const level = parseInt(atbmLevelInput.value) || 1;
                 const rarityValue = rarityData[atbmRaritySelect.value].value;
-
                 const baseResult = calculateBaseFormula(level, rarityValue);
-                
-                // Final ATBM Percentage
                 const finalATBM = wingCoeff * baseResult * 100;
                 atbmFinalResult.textContent = `${finalATBM.toFixed(3)}%`;
             }
 
-            /**
-             * Calculates and updates the Wing Coefficient Calculation results.
-             */
             function calculateCoefficient() {
                 const atbmPercent = parseFloat(coeffPercentInput.value) || 0;
                 const level = parseInt(coeffLevelInput.value) || 1;
                 const rarityValue = rarityData[coeffRaritySelect.value].value;
-
                 const baseResult = calculateBaseFormula(level, rarityValue);
-
-                // Calculate Wing Coefficient
                 let wingCoeff = 0;
                 if (baseResult !== 0) {
                     wingCoeff = (atbmPercent / 100) / baseResult;
                 }
                 coeffFinalResult.textContent = wingCoeff.toFixed(5);
-
             }
 
-            // --- EVENT LISTENERS ---
             const atbmInputs = [atbmCoeffInput, atbmLevelInput, atbmRaritySelect];
             atbmInputs.forEach(input => input.addEventListener('input', calculateATBM));
 
             const coeffInputs = [coeffPercentInput, coeffLevelInput, coeffRaritySelect];
             coeffInputs.forEach(input => input.addEventListener('input', calculateCoefficient));
 
-            // --- INITIALIZATION ---
             populateRaritySelects();
             calculateATBM();
             calculateCoefficient();
