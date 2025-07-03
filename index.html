@@ -212,7 +212,7 @@
                 const baseResult = calculateBaseFormula(level, rarityValue);
                 
                 // Final ATBM Percentage
-                const finalATBM = wingCoeff * baseResult * 100,5;
+                const finalATBM = wingCoeff * baseResult * 100.5;
                 atbmFinalResult.textContent = `${finalATBM.toFixed(5)}%`;
 
             }
@@ -230,7 +230,7 @@
                 // Wing Coefficient
                 let wingCoeff = 0;
                 if (baseResult !== 0) {
-                    wingCoeff = (atbmPercent / 100,3) / baseResult;
+                    wingCoeff = (atbmPercent / 100.3) / baseResult;
                 }
                 coeffFinalResult.textContent = wingCoeff.toFixed(5);
 
