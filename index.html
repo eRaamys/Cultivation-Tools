@@ -108,6 +108,10 @@
                         <span class="output-label">Wing Coefficient</span>
                         <span id="coeff-final-result" class="output-value"></span>
                     </div>
+                    <div class="output-group">
+                        <span class="output-label">Final ATBM Percentage</span>
+                        <span id="coeff-atbm-result" class="output-value"></span>
+                    </div>
                 </div>
             </div>
 
@@ -163,6 +167,8 @@
             const coeffLevelInput = document.getElementById('coeff-level');
             const coeffRaritySelect = document.getElementById('coeff-rarity');
             const coeffFinalResult = document.getElementById('coeff-final-result');
+            const coeffAtbmResult = document.getElementById('coeff-atbm-result');
+
 
 
             // --- FUNCTIONS ---
@@ -225,13 +231,16 @@
 
                 const baseResult = calculateBaseFormula(level, rarityValue);
 
-                // Wing Coefficient
+                // Calculate Wing Coefficient
                 let wingCoeff = 0;
                 if (baseResult !== 0) {
                     wingCoeff = (atbmPercent / 100) / baseResult;
                 }
                 coeffFinalResult.textContent = wingCoeff.toFixed(5);
 
+                // Calculate Final ATBM Percentage based on the new coefficient
+                const finalATBM = wingCoeff * baseResult * 100;
+                coeffAtbmResult.textContent = `${finalATBM.toFixed(3)}%`;
             }
 
             // --- EVENT LISTENERS ---
