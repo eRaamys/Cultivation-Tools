@@ -89,7 +89,6 @@
             <!-- 1: Wing Coefficient Calculation -->
             <div class="card" id="coeff-calculator">
                 <h2 class="text-2xl font-bold text-white border-b border-gray-600 pb-3 mb-4">1. Wing Coefficient Calculation</h2>
-
                 <div class="input-group">
                     <label for="coeff-atbm-percent">ATBM Percentage (%)</label>
                     <input type="number" id="coeff-atbm-percent" class="input-field" value="0.536" step="0.001">
@@ -102,7 +101,6 @@
                     <label for="coeff-rarity">Rarity Wing</label>
                     <select id="coeff-rarity" class="input-field"></select>
                 </div>
-                
                 <div class="mt-6">
                     <h3 class="text-lg font-semibold text-white mb-2">Result:</h3>
                     <div class="output-group highlight-output">
@@ -115,7 +113,6 @@
             <!-- 2: Wing ATBM Calculation -->
             <div class="card" id="atbm-calculator">
                 <h2 class="text-2xl font-bold text-white border-b border-gray-600 pb-3 mb-4">2. Wing ATBM Calculation</h2>
-                
                 <div class="input-group">
                     <label for="atbm-wing-coeff">Wing Coefficient</label>
                     <input type="number" id="atbm-wing-coeff" class="input-field" value="1.0" step="0.001">
@@ -128,7 +125,6 @@
                     <label for="atbm-rarity">Rarity Wing</label>
                     <select id="atbm-rarity" class="input-field"></select>
                 </div>
-
                 <div class="mt-6">
                     <h3 class="text-lg font-semibold text-white mb-2">Result:</h3>
                     <div class="output-group highlight-output">
@@ -141,60 +137,36 @@
         <div class="text-center mt-8">
             <p class="text-red-400 mt-2 text-center mb-2">Warning. best way to get accurate stats of scarce wing its trade wing to low level alts as it would give 3 decimal instead of 1 decimal such on picture</p>
             <img class="mx-auto" src="https://cdn.discordapp.com/attachments/1390174747916238949/1390362631713329162/image.png?ex=6867fb9b&is=6866aa1b&hm=3c7608c2ab58154746bc3352e8fe772e24c22530fe0673cb9daf2d84dd38ea0d&" />
-            <!-- Visitor Counter Display -->
             <p class="text-gray-500 text-sm mt-4">Total Visitors: <span id="visitor-count" class="font-bold text-gray-400">Loading...</span></p>
         </div>
     </div>
 
     <!-- Firebase SDK -->
     <script type="module">
-        // Import functions from the Firebase SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, doc, runTransaction, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, runTransaction, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // --- SECURE FIREBASE INITIALIZATION ---
-        // This code safely initializes Firebase without exposing keys in the source code.
-        // It uses special variables provided by the environment.
-        let app, db, auth;
-        try {
-            const firebaseConfig = typeof __firebase_config !== 'undefined' 
-                ? JSON.parse(__firebase_config)
-                : undefined;
+        // Your web app's Firebase configuration.
+        // It is SAFE to have this in public code IF you secure your API key (see instructions).
+        const firebaseConfig = {
+          apiKey: "AIzaSyDxjVnWCz2QUGzpAXhItVr_8al4jfLuozk", // This is your public API key
+          authDomain: "eraamy-ac9f4.firebaseapp.com",
+          projectId: "eraamy-ac9f4",
+          storageBucket: "eraamy-ac9f4.appspot.com",
+          messagingSenderId: "554835178988",
+          appId: "1:554835178988:web:2404696e93fbbd2dba3cc9"
+        };
 
-            if (!firebaseConfig) {
-                throw new Error("Firebase config not found.");
-            }
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
 
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-            setLogLevel('debug'); // Optional: for detailed logs
-        } catch (e) {
-            console.error("Fatal Error: Could not initialize Firebase.", e);
-            // Display an error on the page
-            const counterElement = document.getElementById('visitor-count');
-            if (counterElement) {
-                counterElement.textContent = "Initialization Failed.";
-            }
-        }
-
-        // --- VISITOR COUNTER LOGIC ---
         async function initializeCounter() {
-            // Ensure Firebase was initialized before proceeding
-            if (!auth || !db) return; 
-
             try {
-                // Sign in securely using the token provided by the environment, or fall back to anonymous.
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
+                await signInAnonymously(auth);
                 const counterRef = doc(db, "visitors", "site-counter");
-
-                // Use a transaction to safely increment the counter
                 await runTransaction(db, async (transaction) => {
                     const counterDoc = await transaction.get(counterRef);
                     if (!counterDoc.exists()) {
@@ -204,40 +176,26 @@
                         transaction.update(counterRef, { count: newCount });
                     }
                 });
-
-                // Listen for real-time updates to the counter
                 onSnapshot(counterRef, (doc) => {
                     const count = doc.exists() ? doc.data().count : 0;
                     document.getElementById('visitor-count').textContent = count.toLocaleString('id-ID');
                 });
-
             } catch (error) {
                 console.error("Error with visitor counter:", error);
                 document.getElementById('visitor-count').textContent = 'Error';
             }
         }
 
-        // --- CALCULATOR LOGIC ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize the visitor counter first
             initializeCounter();
-
             const rarityData = {
-                'scarce': { value: 6, name: 'Scarce' },
-                'epic': { value: 7, name: 'Epic' },
-                'legendary': { value: 8, name: 'Legendary' },
-                'immortal': { value: 9, name: 'Immortal' },
-                'myth': { value: 10, name: 'Myth' },
-                'eternal': { value: 11, name: 'Eternal' },
-                'celestial': { value: 12, name: 'Celestial' }
+                'scarce': { value: 6, name: 'Scarce' }, 'epic': { value: 7, name: 'Epic' }, 'legendary': { value: 8, name: 'Legendary' }, 'immortal': { value: 9, name: 'Immortal' }, 'myth': { value: 10, name: 'Myth' }, 'eternal': { value: 11, name: 'Eternal' }, 'celestial': { value: 12, name: 'Celestial' }
             };
             const LEVEL_MULTIPLIER = 0.0000555555555555556;
-
             const atbmCoeffInput = document.getElementById('atbm-wing-coeff');
             const atbmLevelInput = document.getElementById('atbm-level');
             const atbmRaritySelect = document.getElementById('atbm-rarity');
             const atbmFinalResult = document.getElementById('atbm-final-result');
-
             const coeffPercentInput = document.getElementById('coeff-atbm-percent');
             const coeffLevelInput = document.getElementById('coeff-level');
             const coeffRaritySelect = document.getElementById('coeff-rarity');
@@ -290,10 +248,8 @@
 
             const atbmInputs = [atbmCoeffInput, atbmLevelInput, atbmRaritySelect];
             atbmInputs.forEach(input => input.addEventListener('input', calculateATBM));
-
             const coeffInputs = [coeffPercentInput, coeffLevelInput, coeffRaritySelect];
             coeffInputs.forEach(input => input.addEventListener('input', calculateCoefficient));
-
             populateRaritySelects();
             calculateATBM();
             calculateCoefficient();
