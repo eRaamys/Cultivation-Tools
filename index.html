@@ -142,7 +142,6 @@
 
     <script type="module">
         document.addEventListener('DOMContentLoaded', () => {
-            initializeCounter();
             const rarityData = {
                 'scarce': { value: 6, name: 'Scarce' }, 'epic': { value: 7, name: 'Epic' }, 'legendary': { value: 8, name: 'Legendary' }, 'immortal': { value: 9, name: 'Immortal' }, 'myth': { value: 10, name: 'Myth' }, 'eternal': { value: 11, name: 'Eternal' }, 'celestial': { value: 12, name: 'Celestial' }
             };
@@ -181,6 +180,7 @@
             }
 
             function calculateATBM() {
+                if (!atbmCoeffInput) return;
                 const wingCoeff = parseFloat(atbmCoeffInput.value) || 0;
                 const level = parseInt(atbmLevelInput.value) || 1;
                 const rarityValue = rarityData[atbmRaritySelect.value].value;
@@ -190,6 +190,7 @@
             }
 
             function calculateCoefficient() {
+                if(!coeffPercentInput) return;
                 const atbmPercent = parseFloat(coeffPercentInput.value) || 0;
                 const level = parseInt(coeffLevelInput.value) || 1;
                 const rarityValue = rarityData[coeffRaritySelect.value].value;
@@ -205,6 +206,7 @@
             atbmInputs.forEach(input => input.addEventListener('input', calculateATBM));
             const coeffInputs = [coeffPercentInput, coeffLevelInput, coeffRaritySelect];
             coeffInputs.forEach(input => input.addEventListener('input', calculateCoefficient));
+
             populateRaritySelects();
             calculateATBM();
             calculateCoefficient();
