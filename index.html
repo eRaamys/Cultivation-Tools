@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cultivation Tools</title>
-    <!-- Ikon Website ditambahkan di sini -->
+    <!-- Icon -->
     <link rel="icon" type="image/webp" href="https://tr.rbxcdn.com/180DAY-e3b172c999c4bbc6ef671fcad60e51d0/256/256/Image/Webp/noFilter">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -84,8 +84,9 @@
             color: #d1d5db;
             transition: background-color 0.2s, color 0.2s;
             font-weight: 500;
+            cursor: pointer;
         }
-        .sidebar-link:hover {
+        .sidebar-link.active, .sidebar-link:hover {
             background-color: #374151;
             color: #ffffff;
         }
@@ -94,6 +95,14 @@
             flex-shrink: 0;
             width: 1.5rem; /* 24px */
             height: 1.5rem; /* 24px */
+        }
+        .sidebar-header {
+            padding: 0.75rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
     </style>
 </head>
@@ -109,8 +118,26 @@
 
     <!-- Sidebar -->
     <aside id="sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen p-4 transition-transform -translate-x-full bg-gray-800">
-        <nav class="flex flex-col space-y-2 mt-10">
-            <a href="https://www.roblox.com/games/18645473062/Guild-War-V35-Cultivation-Mortal-to-Immortal" target="_blank" rel="noopener noreferrer" class="sidebar-link mt-6">
+        <nav class="flex flex-col space-y-1 mt-10">
+            <!-- Tools Section -->
+            <h3 class="sidebar-header">Tools</h3>
+            <a id="nav-calculator" class="sidebar-link active">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.092 1.21-.138 2.43-.138 3.662a48.678 48.678 0 007.462 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12v3.25A15.953 15.953 0 0112 15.75v-3.75m-7.5 3.75c-1.258-1.03-2.336-2.318-3.15-3.75m16.35 0c.814 1.432 1.892 2.72 3.15 3.75M12 15.75c-3.314 0-6-1.48-6-3.25v-3.25a15.953 15.953 0 016-1.5v4.75z" />
+                </svg>
+                <span>Wing Calculator</span>
+            </a>
+            <a id="nav-coming-soon" class="sidebar-link">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Coming Soon</span>
+            </a>
+
+            <!-- Social Links Section -->
+            <h3 class="sidebar-header pt-4">Social Links</h3>
+            <a href="https://www.roblox.com/games/18645473062/Guild-War-V35-Cultivation-Mortal-to-Immortal" target="_blank" rel="noopener noreferrer" class="sidebar-link">
                 <!-- rblx icon-->
                 <img src="https://images.rbxcdn.com/e854eb7b2951ac03edba9a2681032bba.ico" alt="Roblox Icon" class="icon" style="padding: 2px;">
                 <span>Roblox Game</span>
@@ -126,9 +153,10 @@
     <!-- Overlay -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-gray-900/80 z-30 hidden"></div>
 
-    <!-- Calc -->
+    <!-- Main Content -->
     <main class="flex-1 overflow-y-auto">
-        <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <!-- Calculator Page -->
+        <div id="page-calculator" class="container mx-auto p-4 md:p-8 max-w-7xl">
             <header class="text-center mb-8">
                 <h1 class="text-3xl md:text-4xl font-bold text-white">Wing Calculator</h1>
                 <p class="text-gray-400 mt-2">ATBM & Coefficient Wing Calculator By @supluckydior.</p>
@@ -136,7 +164,6 @@
             </header>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
                 <!-- 1: Wing Coefficient Calculation -->
                 <div class="card" id="coeff-calculator">
                     <h2 class="text-2xl font-bold text-white border-b border-gray-600 pb-3 mb-4">1. Wing Coefficient Calculation</h2>
@@ -160,7 +187,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- 2: Wing ATBM Calculation -->
                 <div class="card" id="atbm-calculator">
                     <h2 class="text-2xl font-bold text-white border-b border-gray-600 pb-3 mb-4">2. Wing ATBM Calculation</h2>
@@ -190,10 +216,50 @@
                 <img class="mx-auto" src="https://cdn.discordapp.com/attachments/1390174747916238949/1390362631713329162/image.png?ex=6867fb9b&is=6866aa1b&hm=3c7608c2ab58154746bc3352e8fe772e24c22530fe0673cb9daf2d84dd38ea0d&" />
             </div>
         </div>
+
+        <!-- Coming Soon Page -->
+        <div id="page-coming-soon" class="hidden container mx-auto p-4 md:p-8 text-center">
+            <h1 class="text-5xl font-bold text-white mt-20">Coming Soon</h1>
+            <p class="text-gray-400 mt-4 text-lg">We are working hard on new features. Stay tuned!</p>
+        </div>
     </main>
 
     <script type="module">
         document.addEventListener('DOMContentLoaded', () => {
+            // --- Page Navigation Logic ---
+            const navCalculator = document.getElementById('nav-calculator');
+            const navComingSoon = document.getElementById('nav-coming-soon');
+            const pageCalculator = document.getElementById('page-calculator');
+            const pageComingSoon = document.getElementById('page-coming-soon');
+            
+            const navLinks = [navCalculator, navComingSoon];
+            const pages = [pageCalculator, pageComingSoon];
+
+            function showPage(pageToShow) {
+                pages.forEach(page => {
+                    page.classList.add('hidden');
+                });
+                pageToShow.classList.remove('hidden');
+            }
+
+            function setActiveLink(linkToActivate) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active', 'bg-gray-700', 'text-white');
+                });
+                linkToActivate.classList.add('active', 'bg-gray-700', 'text-white');
+            }
+
+            navCalculator.addEventListener('click', () => {
+                showPage(pageCalculator);
+                setActiveLink(navCalculator);
+            });
+
+            navComingSoon.addEventListener('click', () => {
+                showPage(pageComingSoon);
+                setActiveLink(navComingSoon);
+            });
+
+
             // --- Sidebar Toggle Logic ---
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.getElementById('sidebar-toggle');
