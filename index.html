@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cultivation Tools</title>
-    <!-- Icon -->
     <link rel="icon" type="image/webp" href="https://tr.rbxcdn.com/180DAY-e3b172c999c4bbc6ef671fcad60e51d0/256/256/Image/Webp/noFilter">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -75,7 +74,7 @@
             color: #ffffff;
             font-size: 1.25rem;
         }
-        /* sidebar */
+        /* Gaya untuk tautan di sidebar */
         .sidebar-link {
             display: flex;
             align-items: center;
@@ -108,7 +107,6 @@
 </head>
 <body class="bg-gray-900">
 
-    <!-- Sidebar btn -->
     <button id="sidebar-toggle" type="button" class="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-400 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 fixed top-2 left-2 z-50">
         <span class="sr-only">Open sidebar</span>
         <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -116,10 +114,8 @@
         </svg>
     </button>
 
-    <!-- Sidebar -->
     <aside id="sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen p-4 transition-transform -translate-x-full bg-gray-800">
         <nav class="flex flex-col space-y-1 mt-10">
-            <!-- Tools Section -->
             <h3 class="sidebar-header">Tools</h3>
             <a id="nav-calculator" class="sidebar-link active">
                 <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -128,34 +124,29 @@
                 </svg>
                 <span>Wing Calculator</span>
             </a>
-            <a id="nav-coming-soon" class="sidebar-link">
+            <a id="nav-elixir-calculator" class="sidebar-link">
                 <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.092 1.21-.138 2.43-.138 3.662a48.678 48.678 0 007.462 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12v3.25A15.953 15.953 0 0112 15.75v-3.75m-7.5 3.75c-1.258-1.03-2.336-2.318-3.15-3.75m16.35 0c.814 1.432 1.892 2.72 3.15 3.75M12 15.75c-3.314 0-6-1.48-6-3.25v-3.25a15.953 15.953 0 016-1.5v4.75z" />
                 </svg>
-                <span>Coming Soon</span>
+                <span>Elixir Calculator</span>
             </a>
 
-            <!-- Social Links Section -->
             <h3 class="sidebar-header pt-4">Social Links</h3>
             <a href="https://www.roblox.com/games/18645473062/Guild-War-V35-Cultivation-Mortal-to-Immortal" target="_blank" rel="noopener noreferrer" class="sidebar-link">
-                <!-- rblx icon-->
                 <img src="https://images.rbxcdn.com/e854eb7b2951ac03edba9a2681032bba.ico" alt="Roblox Icon" class="icon" style="padding: 2px;">
                 <span>Roblox Game</span>
             </a>
             <a href="https://discord.com/invite/gFgcEavupb" target="_blank" rel="noopener noreferrer" class="sidebar-link">
-                <!-- Discord icon -->
-                <img src="https://cdn.discordapp.com/attachments/1381229508958617720/1390478885552132197/discord-logo-discord-icon-transparent-free-png_1.png?ex=686a6220&is=686910a0&hm=8077c728c234765019e9bc280b8c43338601c3b27de1e28562499f2dade6123c&" alt="Discord Icon" class="icon">
+                <img src="https://cdn.discordapp.com/attachments/1381229508958617720/1390478885552132197/discord-logo-discord-icon-transparent-free-png_1.png?ex=686867e0&is=68671660&hm=0b23d6e4ec32ad49b2262d3b031eaf5d85d3691a0923668291e6d64c574b48be&" alt="Discord Icon" class="icon">
                 <span>Official Discord Server</span>
             </a>
         </nav>
     </aside>
 
-    <!-- Overlay -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-gray-900/80 z-30 hidden"></div>
 
-    <!-- Main Content -->
     <main class="flex-1 overflow-y-auto">
-        <!-- Calculator Page -->
         <div id="page-calculator" class="container mx-auto p-4 md:p-8 max-w-7xl">
             <header class="text-center mb-8">
                 <h1 class="text-3xl md:text-4xl font-bold text-white">Wing Calculator</h1>
@@ -164,51 +155,19 @@
             </header>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- 1: Wing Coefficient Calculation -->
                 <div class="card" id="coeff-calculator">
                     <h2 class="text-2xl font-bold text-white border-b border-gray-600 pb-3 mb-4">1. Wing Coefficient Calculation</h2>
-                    <div class="input-group">
-                        <label for="coeff-atbm-percent">ATBM Percentage (%)</label>
-                        <input type="number" id="coeff-atbm-percent" class="input-field" value="0.536" step="0.001">
-                    </div>
-                    <div class="input-group">
-                        <label for="coeff-level">Level</label>
-                        <input type="number" id="coeff-level" class="input-field" value="1">
-                    </div>
-                    <div class="input-group">
-                        <label for="coeff-rarity">Rarity Wing</label>
-                        <select id="coeff-rarity" class="input-field"></select>
-                    </div>
-                    <div class="mt-6">
-                        <h3 class="text-lg font-semibold text-white mb-2">Result:</h3>
-                        <div class="output-group highlight-output">
-                            <span class="output-label">Wing Coefficient</span>
-                            <span id="coeff-final-result" class="output-value"></span>
-                        </div>
-                    </div>
+                    <div class="input-group"><label for="coeff-atbm-percent">ATBM Percentage (%)</label><input type="number" id="coeff-atbm-percent" class="input-field" value="0.536" step="0.001"></div>
+                    <div class="input-group"><label for="coeff-level">Level</label><input type="number" id="coeff-level" class="input-field" value="1"></div>
+                    <div class="input-group"><label for="coeff-rarity">Rarity Wing</label><select id="coeff-rarity" class="input-field"></select></div>
+                    <div class="mt-6"><h3 class="text-lg font-semibold text-white mb-2">Result:</h3><div class="output-group highlight-output"><span class="output-label">Wing Coefficient</span><span id="coeff-final-result" class="output-value"></span></div></div>
                 </div>
-                <!-- 2: Wing ATBM Calculation -->
                 <div class="card" id="atbm-calculator">
                     <h2 class="text-2xl font-bold text-white border-b border-gray-600 pb-3 mb-4">2. Wing ATBM Calculation</h2>
-                    <div class="input-group">
-                        <label for="atbm-wing-coeff">Wing Coefficient</label>
-                        <input type="number" id="atbm-wing-coeff" class="input-field" value="1.0" step="0.001">
-                    </div>
-                    <div class="input-group">
-                        <label for="atbm-level">Level</label>
-                        <input type="number" id="atbm-level" class="input-field" value="1">
-                    </div>
-                    <div class="input-group">
-                        <label for="atbm-rarity">Rarity Wing</label>
-                        <select id="atbm-rarity" class="input-field"></select>
-                    </div>
-                    <div class="mt-6">
-                        <h3 class="text-lg font-semibold text-white mb-2">Result:</h3>
-                        <div class="output-group highlight-output">
-                            <span class="output-label">Final ATBM Percentage</span>
-                            <span id="atbm-final-result" class="output-value"></span>
-                        </div>
-                    </div>
+                    <div class="input-group"><label for="atbm-wing-coeff">Wing Coefficient</label><input type="number" id="atbm-wing-coeff" class="input-field" value="1.0" step="0.001"></div>
+                    <div class="input-group"><label for="atbm-level">Level</label><input type="number" id="atbm-level" class="input-field" value="1"></div>
+                    <div class="input-group"><label for="atbm-rarity">Rarity Wing</label><select id="atbm-rarity" class="input-field"></select></div>
+                    <div class="mt-6"><h3 class="text-lg font-semibold text-white mb-2">Result:</h3><div class="output-group highlight-output"><span class="output-label">Final ATBM Percentage</span><span id="atbm-final-result" class="output-value"></span></div></div>
                 </div>
             </div>
             <div class="text-center mt-8">
@@ -217,10 +176,24 @@
             </div>
         </div>
 
-        <!-- Coming Soon Page -->
-        <div id="page-coming-soon" class="hidden container mx-auto p-4 md:p-8 text-center">
-            <h1 class="text-5xl font-bold text-white mt-20">Coming Soon</h1>
-            <p class="text-gray-400 mt-4 text-lg">We are working hard on new features. Stay tuned!</p>
+        <div id="page-elixir-calculator" class="hidden container mx-auto p-4 md:p-8 max-w-4xl">
+             <header class="text-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-white">Elixir Points Calculator</h1>
+                <p class="text-gray-400 mt-2">Calculate your total elixir points.</p>
+            </header>
+            <div class="card">
+                <div class="grid grid-cols-4 gap-4 px-4 py-2 border-b border-gray-600 font-semibold">
+                    <div>Rarity</div>
+                    <div class="text-center">Value</div>
+                    <div class="text-center">Quantity</div>
+                    <div class="text-right">Points</div>
+                </div>
+                <div id="elixir-rows-container"></div>
+                <div class="grid grid-cols-4 gap-4 px-4 py-3 border-t-2 border-blue-500 mt-4">
+                    <div class="col-span-3 text-right font-bold text-lg">Total Points</div>
+                    <div id="elixir-total-points" class="text-right font-bold text-lg text-blue-400">0</div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -228,24 +201,20 @@
         document.addEventListener('DOMContentLoaded', () => {
             // --- Page Navigation Logic ---
             const navCalculator = document.getElementById('nav-calculator');
-            const navComingSoon = document.getElementById('nav-coming-soon');
+            const navElixirCalculator = document.getElementById('nav-elixir-calculator');
             const pageCalculator = document.getElementById('page-calculator');
-            const pageComingSoon = document.getElementById('page-coming-soon');
+            const pageElixirCalculator = document.getElementById('page-elixir-calculator');
             
-            const navLinks = [navCalculator, navComingSoon];
-            const pages = [pageCalculator, pageComingSoon];
+            const navLinks = [navCalculator, navElixirCalculator];
+            const pages = [pageCalculator, pageElixirCalculator];
 
             function showPage(pageToShow) {
-                pages.forEach(page => {
-                    page.classList.add('hidden');
-                });
+                pages.forEach(page => page.classList.add('hidden'));
                 pageToShow.classList.remove('hidden');
             }
 
             function setActiveLink(linkToActivate) {
-                navLinks.forEach(link => {
-                    link.classList.remove('active', 'bg-gray-700', 'text-white');
-                });
+                navLinks.forEach(link => link.classList.remove('active', 'bg-gray-700', 'text-white'));
                 linkToActivate.classList.add('active', 'bg-gray-700', 'text-white');
             }
 
@@ -254,26 +223,69 @@
                 setActiveLink(navCalculator);
             });
 
-            navComingSoon.addEventListener('click', () => {
-                showPage(pageComingSoon);
-                setActiveLink(navComingSoon);
+            navElixirCalculator.addEventListener('click', () => {
+                showPage(pageElixirCalculator);
+                setActiveLink(navElixirCalculator);
             });
-
 
             // --- Sidebar Toggle Logic ---
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.getElementById('sidebar-toggle');
             const overlay = document.getElementById('sidebar-overlay');
-
             const toggleSidebar = () => {
                 sidebar.classList.toggle('-translate-x-full');
                 overlay.classList.toggle('hidden');
             };
-
             toggleBtn.addEventListener('click', toggleSidebar);
             overlay.addEventListener('click', toggleSidebar);
 
-            // --- Calculator Logic ---
+            // --- Elixir Calculator ---
+            const elixirRarities = [
+                { name: 'Common', value: 1, id: 'common' },
+                { name: 'Good', value: 2, id: 'good' },
+                { name: 'Sturdy', value: 3, id: 'sturdy' },
+                { name: 'Rare', value: 4, id: 'rare' },
+                { name: 'Perfect', value: 5, id: 'perfect' },
+                { name: 'Scarce', value: 6, id: 'scarce' },
+                { name: 'Epic', value: 8, id: 'epic' },
+                { name: 'Legendary', value: 10, id: 'legendary' },
+                { name: 'Immortal', value: 14, id: 'immortal' },
+                { name: 'Myth', value: 20, id: 'myth' },
+                { name: 'Eternal', value: 28, id: 'eternal' }
+            ];
+            const elixirContainer = document.getElementById('elixir-rows-container');
+            const totalPointsEl = document.getElementById('elixir-total-points');
+
+            function calculateElixirPoints() {
+                let totalPoints = 0;
+                elixirRarities.forEach(rarity => {
+                    const quantityInput = document.getElementById(`elixir-quantity-${rarity.id}`);
+                    const pointsOutput = document.getElementById(`elixir-points-${rarity.id}`);
+                    const quantity = parseInt(quantityInput.value) || 0;
+                    const points = quantity * rarity.value;
+                    pointsOutput.textContent = points.toLocaleString('id-ID');
+                    totalPoints += points;
+                });
+                totalPointsEl.textContent = totalPoints.toLocaleString('id-ID');
+            }
+
+            elixirRarities.forEach(rarity => {
+                const row = document.createElement('div');
+                row.className = 'grid grid-cols-4 gap-4 items-center px-4 py-2 border-b border-gray-700';
+                row.innerHTML = `
+                    <div class="font-medium">${rarity.name}</div>
+                    <div class="text-center text-gray-400">${rarity.value}</div>
+                    <div class="text-center">
+                        <input type="number" id="elixir-quantity-${rarity.id}" class="input-field text-center" min="0" value="0">
+                    </div>
+                    <div id="elixir-points-${rarity.id}" class="text-right font-semibold text-blue-400">0</div>
+                `;
+                elixirContainer.appendChild(row);
+                document.getElementById(`elixir-quantity-${rarity.id}`).addEventListener('input', calculateElixirPoints);
+            });
+            
+
+            // --- Wing Calculator Logic ---
             const rarityData = {
                 'scarce': { value: 6, name: 'Scarce' }, 'epic': { value: 7, name: 'Epic' }, 'legendary': { value: 8, name: 'Legendary' }, 'immortal': { value: 9, name: 'Immortal' }, 'myth': { value: 10, name: 'Myth' }, 'eternal': { value: 11, name: 'Eternal' }, 'celestial': { value: 12, name: 'Celestial' }
             };
