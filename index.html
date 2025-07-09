@@ -104,6 +104,23 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
+        /* Elixir Checkbox */
+        .elixir-checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid #4b5563;
+            background-color: #374151;
+            transition: all 0.2s;
+        }
+        .elixir-checkbox:checked + .elixir-checkbox-label {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
     </style>
 </head>
 <body class="bg-gray-900">
@@ -141,7 +158,7 @@
                 <span>Roblox Game</span>
             </a>
             <a href="https://discord.com/invite/gFgcEavupb" target="_blank" rel="noopener noreferrer" class="sidebar-link">
-                <img src="discord.png" alt="Discord Icon" class="icon">
+                <img src="https://cdn.discordapp.com/attachments/1381229508958617720/1390478885552132197/discord-logo-discord-icon-transparent-free-png_1.png?ex=686867e0&is=68671660&hm=0b23d6e4ec32ad49b2262d3b031eaf5d85d3691a0923668291e6d64c574b48be&" alt="Discord Icon" class="icon">
                 <span>Official Discord Server</span>
             </a>
         </nav>
@@ -159,13 +176,20 @@
                 <div class="card" id="coeff-calculator"><h2 class="text-2xl font-bold text-white border-b border-gray-600 pb-3 mb-4">1. Wing Coefficient Calculation</h2><div class="input-group"><label for="coeff-atbm-percent">ATBM Percentage (%)</label><input type="number" id="coeff-atbm-percent" class="input-field" value="0" step="0.001"></div><div class="input-group"><label for="coeff-level">Level</label><input type="number" id="coeff-level" class="input-field" value="1"></div><div class="input-group"><label for="coeff-rarity">Rarity Wing</label><select id="coeff-rarity" class="input-field"></select></div><div class="mt-6"><h3 class="text-lg font-semibold text-white mb-2">Result:</h3><div class="output-group highlight-output"><span class="output-label">Wing Coefficient</span><span id="coeff-final-result" class="output-value"></span></div></div></div>
                 <div class="card" id="atbm-calculator"><h2 class="text-2xl font-bold text-white border-b border-gray-600 pb-3 mb-4">2. Wing ATBM Calculation</h2><div class="input-group"><label for="atbm-wing-coeff">Wing Coefficient</label><input type="number" id="atbm-wing-coeff" class="input-field" value="0" step="0.001"></div><div class="input-group"><label for="atbm-level">Level</label><input type="number" id="atbm-level" class="input-field" value="1"></div><div class="input-group"><label for="atbm-rarity">Rarity Wing</label><select id="atbm-rarity" class="input-field"></select></div><div class="mt-6"><h3 class="text-lg font-semibold text-white mb-2">Result:</h3><div class="output-group highlight-output"><span class="output-label">Final ATBM Percentage</span><span id="atbm-final-result" class="output-value"></span></div></div></div>
             </div>
-            <div class="text-center mt-8"><p class="text-red-400 mt-2 text-center mb-2">Warning. best way to get accurate stats of scarce wing its trade wing to low level alts as it would give 3 decimal instead of 1 decimal such on picture</p><img class="mx-auto" src="wing.png" /></div>
+            <div class="text-center mt-8"><p class="text-red-400 mt-2 text-center mb-2">Warning. best way to get accurate stats of scarce wing its trade wing to low level alts as it would give 3 decimal instead of 1 decimal such on picture</p><img class="mx-auto" src="https://cdn.discordapp.com/attachments/1390174747916238949/1390362631713329162/image.png?ex=6867fb9b&is=6866aa1b&hm=3c7608c2ab58154746bc3352e8fe772e24c22530fe0673cb9daf2d84dd38ea0d&" /></div>
         </div>
 
         <!-- Elixir Calculator Page -->
-        <div id="page-elixir-calculator" class="hidden container mx-auto p-4 md:p-8 max-w-4xl">
-             <header class="text-center mb-8"><h1 class="text-3xl md:text-4xl font-bold text-white">Elixir Points Calculator</h1><p class="text-gray-400 mt-2">Calculate your total elixir points based on quantity.</p></header>
-            <div class="card"><div class="grid grid-cols-4 gap-4 px-4 py-2 border-b border-gray-600 font-semibold"><div>Rarity</div><div class="text-center">Value</div><div class="text-center">Quantity</div><div class="text-right">Points</div></div><div id="elixir-rows-container"></div><div class="grid grid-cols-4 gap-4 px-4 py-3 border-t-2 border-blue-500 mt-4"><div class="col-span-3 text-right font-bold text-lg">Total Points</div><div id="elixir-total-points" class="text-right font-bold text-lg text-blue-400">0</div></div></div>
+        <div id="page-elixir-calculator" class="hidden container mx-auto p-4 md:p-8 max-w-7xl">
+             <header class="text-center mb-8"><h1 class="text-3xl md:text-4xl font-bold text-white">Elixir Points Calculator</h1><p class="text-gray-400 mt-2">Calculate total points from your elixirs.</p></header>
+             <div class="card">
+                <div id="elixir-checkbox-container" class="flex flex-wrap gap-2 mb-6"></div>
+                <div id="elixir-sections-container" class="space-y-6"></div>
+             </div>
+             <div class="card mt-6">
+                <h3 class="text-xl font-semibold text-white mb-4">Total Points</h3>
+                <div id="elixir-totals-container" class="grid grid-cols-2 md:grid-cols-5 gap-4"></div>
+             </div>
         </div>
         
         <!-- World Calculator Page -->
@@ -228,6 +252,122 @@
             };
             toggleBtn.addEventListener('click', toggleSidebar);
             overlay.addEventListener('click', toggleSidebar);
+
+            // --- Elixir Calculator Logic ---
+            const elixirData = {
+                rarities: [
+                    { name: 'Common', value: 1, id: 'common', defaultChecked: true },
+                    { name: 'Good', value: 2, id: 'good', defaultChecked: true },
+                    { name: 'Sturdy', value: 3, id: 'sturdy', defaultChecked: false },
+                    { name: 'Rare', value: 4, id: 'rare', defaultChecked: false },
+                    { name: 'Perfect', value: 5, id: 'perfect', defaultChecked: false },
+                    { name: 'Scarce', value: 6, id: 'scarce', defaultChecked: false },
+                    { name: 'Epic', value: 7, id: 'epic', defaultChecked: false },
+                    { name: 'Legendary', value: 10, id: 'legendary', defaultChecked: false },
+                    { name: 'Immortal', value: 14, id: 'immortal', defaultChecked: false },
+                    { name: 'Myth', value: 20, id: 'myth', defaultChecked: false },
+                    { name: 'Eternal', value: 28, id: 'eternal', defaultChecked: false }
+                ],
+                stats: [
+                    { name: 'Attack', id: 'attack' },
+                    { name: 'Critical Hit Damage', id: 'crit' },
+                    { name: 'Talisman Damage', id: 'talisman' },
+                    { name: 'HP', id: 'hp' },
+                    { name: 'Skill Damage', id: 'skill' }
+                ]
+            };
+
+            const checkboxContainer = document.getElementById('elixir-checkbox-container');
+            const sectionsContainer = document.getElementById('elixir-sections-container');
+            const totalsContainer = document.getElementById('elixir-totals-container');
+
+            function calculateElixirTotals() {
+                const totals = {};
+                elixirData.stats.forEach(stat => totals[stat.id] = 0);
+
+                elixirData.rarities.forEach(rarity => {
+                    const checkbox = document.getElementById(`elixir-check-${rarity.id}`);
+                    if (checkbox.checked) {
+                        elixirData.stats.forEach(stat => {
+                            const input = document.getElementById(`elixir-qty-${rarity.id}-${stat.id}`);
+                            const quantity = parseInt(input.value) || 0;
+                            totals[stat.id] += quantity * rarity.value;
+                        });
+                    }
+                });
+
+                elixirData.stats.forEach(stat => {
+                    const totalEl = document.getElementById(`elixir-total-${stat.id}`);
+                    totalEl.textContent = totals[stat.id].toLocaleString('id-ID');
+                });
+            }
+
+            function initElixirCalculator() {
+                // Generate Checkboxes
+                elixirData.rarities.forEach(rarity => {
+                    const div = document.createElement('div');
+                    const checkboxId = `elixir-check-${rarity.id}`;
+                    div.innerHTML = `
+                        <input type="checkbox" id="${checkboxId}" class="hidden elixir-checkbox" ${rarity.defaultChecked ? 'checked' : ''}>
+                        <label for="${checkboxId}" class="elixir-checkbox-label">${rarity.name}</label>
+                    `;
+                    checkboxContainer.appendChild(div);
+                });
+
+                // Generate Rarity Sections
+                elixirData.rarities.forEach(rarity => {
+                    const section = document.createElement('div');
+                    section.id = `elixir-section-${rarity.id}`;
+                    section.className = `p-4 border border-gray-700 rounded-lg ${!rarity.defaultChecked ? 'hidden' : ''}`;
+                    
+                    let inputsHTML = '';
+                    elixirData.stats.forEach(stat => {
+                        inputsHTML += `
+                            <div class="input-group">
+                                <label for="elixir-qty-${rarity.id}-${stat.id}">${stat.name}</label>
+                                <input type="number" id="elixir-qty-${rarity.id}-${stat.id}" class="input-field" value="0" min="0">
+                            </div>
+                        `;
+                    });
+
+                    section.innerHTML = `
+                        <h4 class="text-lg font-bold text-white mb-4">${rarity.name}</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                            ${inputsHTML}
+                        </div>
+                    `;
+                    sectionsContainer.appendChild(section);
+                });
+
+                // Generate Totals Section
+                elixirData.stats.forEach(stat => {
+                    const div = document.createElement('div');
+                    div.className = "text-center";
+                    div.innerHTML = `
+                        <div class="text-sm text-gray-400">${stat.name}</div>
+                        <div id="elixir-total-${stat.id}" class="text-2xl font-bold text-blue-400 mt-1">0</div>
+                    `;
+                    totalsContainer.appendChild(div);
+                });
+
+                // Add Event Listeners
+                elixirData.rarities.forEach(rarity => {
+                    const checkbox = document.getElementById(`elixir-check-${rarity.id}`);
+                    const section = document.getElementById(`elixir-section-${rarity.id}`);
+                    checkbox.addEventListener('change', () => {
+                        section.classList.toggle('hidden', !checkbox.checked);
+                        calculateElixirTotals();
+                    });
+
+                    elixirData.stats.forEach(stat => {
+                        const input = document.getElementById(`elixir-qty-${rarity.id}-${stat.id}`);
+                        input.addEventListener('input', calculateElixirTotals);
+                    });
+                });
+
+                calculateElixirTotals();
+            }
+
 
             // --- World Calculator Logic ---
             const worldData = {
@@ -296,32 +436,6 @@
                 worldCalcInputs.forEach(input => input.addEventListener('input', calculateWorldRates));
                 populateWorlds();
             }
-
-            // --- Elixir Calculator ---
-            const elixirRarities = [{name:'Common',value:1,id:'common'},{name:'Good',value:2,id:'good'},{name:'Sturdy',value:3,id:'sturdy'},{name:'Rare',value:4,id:'rare'},{name:'Perfect',value:5,id:'perfect'},{name:'Scarce',value:6,id:'scarce'},{name:'Epic',value:7,id:'epic'},{name:'Legendary',value:10,id:'legendary'},{name:'Immortal',value:14,id:'immortal'},{name:'Myth',value:20,id:'myth'},{name:'Eternal',value:28,id:'eternal'}];
-            const elixirContainer = document.getElementById('elixir-rows-container');
-            const totalPointsEl = document.getElementById('elixir-total-points');
-
-            function calculateElixirPoints() {
-                let totalPoints = 0;
-                elixirRarities.forEach(rarity => {
-                    const quantityInput = document.getElementById(`elixir-quantity-${rarity.id}`);
-                    const pointsOutput = document.getElementById(`elixir-points-${rarity.id}`);
-                    const quantity = parseInt(quantityInput.value) || 0;
-                    const points = quantity * rarity.value;
-                    pointsOutput.textContent = points.toLocaleString('id-ID');
-                    totalPoints += points;
-                });
-                totalPointsEl.textContent = totalPoints.toLocaleString('id-ID');
-            }
-
-            elixirRarities.forEach(rarity => {
-                const row = document.createElement('div');
-                row.className = 'grid grid-cols-4 gap-4 items-center px-4 py-2 border-b border-gray-700';
-                row.innerHTML = `<div class="font-medium">${rarity.name}</div><div class="text-center text-gray-400">${rarity.value}</div><div class="text-center"><input type="number" id="elixir-quantity-${rarity.id}" class="input-field text-center" min="0" value="0"></div><div id="elixir-points-${rarity.id}" class="text-right font-semibold text-blue-400">0</div>`;
-                elixirContainer.appendChild(row);
-                document.getElementById(`elixir-quantity-${rarity.id}`).addEventListener('input', calculateElixirPoints);
-            });
             
             // --- Wing Calculator Logic ---
             const wingRarityData = {'scarce':{value:6,name:'Scarce'},'epic':{value:7,name:'Epic'},'legendary':{value:8,name:'Legendary'},'immortal':{value:9,name:'Immortal'},'myth':{value:10,name:'Myth'},'eternal':{value:11,name:'Eternal'},'celestial':{value:12,name:'Celestial'}};
@@ -391,6 +505,7 @@
             populateWingRaritySelects();
             calculateATBM();
             calculateCoefficient();
+            initElixirCalculator();
             initWorldCalculator();
         });
     </script>
