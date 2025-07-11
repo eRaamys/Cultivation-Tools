@@ -19,10 +19,13 @@
             border-radius: 0.75rem;
             border: 1px solid #374151;
             padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0; /* Removed bottom margin as gap will handle spacing */
         }
         .input-group {
             margin-bottom: 1rem;
+        }
+        .input-group:last-child {
+            margin-bottom: 0;
         }
         .input-group label {
             display: block;
@@ -52,6 +55,9 @@
             border-radius: 0.375rem;
             margin-top: 0.5rem;
             background-color: #374151;
+        }
+        .output-group:first-of-type {
+            margin-top: 0;
         }
         .output-label {
             font-weight: 500;
@@ -160,7 +166,7 @@
                 <span>Roblox Game</span>
             </a>
             <a href="https://discord.com/invite/gFgcEavupb" target="_blank" rel="noopener noreferrer" class="sidebar-link">
-                <img src="discord.png" alt="Discord Icon" class="icon">
+                <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6cc3c481a15a141738_icon_clyde_white_RGB.png" alt="Discord Icon" class="icon" onerror="this.onerror=null;this.src='https://placehold.co/24x24/374151/ffffff?text=D';">
                 <span>Official Discord Server</span>
             </a>
         </nav>
@@ -178,41 +184,47 @@
                 <div class="card" id="coeff-calculator"><h2 class="text-2xl font-bold text-white border-b border-gray-600 pb-3 mb-4">1. Wing Coefficient Calculation</h2><div class="input-group"><label for="coeff-atbm-percent">ATBM Percentage (%)</label><input type="number" id="coeff-atbm-percent" class="input-field" value="0" step="0.001"></div><div class="input-group"><label for="coeff-level">Level</label><input type="number" id="coeff-level" class="input-field" value="1"></div><div class="input-group"><label for="coeff-rarity">Rarity Wing</label><select id="coeff-rarity" class="input-field"></select></div><div class="mt-6"><h3 class="text-lg font-semibold text-white mb-2">Result:</h3><div class="output-group highlight-output"><span class="output-label">Wing Coefficient</span><span id="coeff-final-result" class="output-value"></span></div></div></div>
                 <div class="card" id="atbm-calculator"><h2 class="text-2xl font-bold text-white border-b border-gray-600 pb-3 mb-4">2. Wing ATBM Calculation</h2><div class="input-group"><label for="atbm-wing-coeff">Wing Coefficient</label><input type="number" id="atbm-wing-coeff" class="input-field" value="0" step="0.001"></div><div class="input-group"><label for="atbm-level">Level</label><input type="number" id="atbm-level" class="input-field" value="1"></div><div class="input-group"><label for="atbm-rarity">Rarity Wing</label><select id="atbm-rarity" class="input-field"></select></div><div class="mt-6"><h3 class="text-lg font-semibold text-white mb-2">Result:</h3><div class="output-group highlight-output"><span class="output-label">Final ATBM Percentage</span><span id="atbm-final-result" class="output-value"></span></div></div></div>
             </div>
-            <div class="text-center mt-8"><p class="text-red-400 mt-2 text-center mb-2">Warning. best way to get accurate stats of scarce wing its trade wing to low level alts as it would give 3 decimal instead of 1 decimal such on picture</p><img class="mx-auto" src="wing.png" /></div>
+            <div class="text-center mt-8"><p class="text-red-400 mt-2 text-center mb-2">Warning. best way to get accurate stats of scarce wing its trade wing to low level alts as it would give 3 decimal instead of 1 decimal such on picture</p><img class="mx-auto" src="https://i.imgur.com/gKfgYx1.png" onerror="this.onerror=null;this.src='https://placehold.co/600x100/1f2937/d1d5db?text=Wing+Example+Image';" /></div>
         </div>
 
         <!-- Elixir Calculator Page -->
         <div id="page-elixir-calculator" class="hidden container mx-auto p-4 md:p-8 max-w-7xl">
              <header class="text-center mb-8"><h1 class="text-3xl md:text-4xl font-bold text-white">Elixir Points Calculator</h1><p class="text-gray-400 mt-2">Calculate total points from your elixirs.</p></header>
              <div class="card">
-                <div id="elixir-checkbox-container" class="flex flex-wrap gap-2 mb-6 justify-center"></div>
-                <div id="elixir-sections-container" class="space-y-6"></div>
+                 <div id="elixir-checkbox-container" class="flex flex-wrap gap-2 mb-6 justify-center"></div>
+                 <div id="elixir-sections-container" class="space-y-6"></div>
              </div>
              <div class="card mt-6">
-                <h3 class="text-xl font-semibold text-white mb-4">Total Points</h3>
-                <div id="elixir-totals-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"></div>
+                 <h3 class="text-xl font-semibold text-white mb-4">Total Points</h3>
+                 <div id="elixir-totals-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"></div>
              </div>
         </div>
         
         <!-- World Calculator Page -->
         <div id="page-world-calculator" class="hidden container mx-auto p-4 md:p-8 max-w-7xl">
             <header class="text-center mb-8"><h1 class="text-3xl md:text-4xl font-bold text-white">World Rate Calculator</h1><p class="text-gray-400 mt-2">Calculate your farming rate per hour.</p></header>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Column 1: Selection & Base Stats -->
-                <div class="md:col-span-1 flex flex-col gap-8">
-                    <div class="card"><h3 class="text-xl font-semibold text-white mb-4">World Selection</h3><div class="input-group"><label for="difficulty-select">Difficulty</label><select id="difficulty-select" class="input-field"></select></div><div class="input-group"><label for="world-select">World</label><select id="world-select" class="input-field"></select></div></div>
-                    <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Base Stats</h3><div class="output-group !bg-gray-800"><span class="output-label">XP / Clear</span><span id="base-xp" class="output-value"></span></div><div class="output-group !bg-gray-800"><span class="output-label">Ore / Drop</span><span id="base-ore" class="output-value"></span></div><div class="output-group !bg-gray-800"><span class="output-label">Coins / Clear</span><span id="base-coins" class="output-value"></span></div></div>
-                </div>
-                <!-- Column 2: Adjustments -->
-                <div class="md:col-span-1 flex flex-col gap-8">
-                    <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Drop Buff Adjustment</h3><div class="input-group"><label for="exp-gain-rate">Exp Gain Rate (%)</label><input type="number" id="exp-gain-rate" class="input-field" value="100" min="100"></div><div class="input-group"><label for="ore-drop-rate">Ore Drop Rate (%)</label><input type="number" id="ore-drop-rate" class="input-field" value="100" min="100"></div><div class="input-group"><label for="gold-drop-rate">Gold Drop Rate (%)</label><input type="number" id="gold-drop-rate" class="input-field" value="100" min="100"></div></div>
-                    <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Extra Drop Adjustment</h3><div class="input-group"><label for="exp-extra-drop">Exp Extra Drop</label><input type="number" id="exp-extra-drop" class="input-field" value="0" min="0"></div><div class="input-group"><label for="gold-extra-drop">Gold Extra Drop</label><input type="number" id="gold-extra-drop" class="input-field" value="0" min="0"></div></div>
-                </div>
-                <!-- Column 3: Time & Results -->
-                <div class="md:col-span-1 flex flex-col gap-8">
-                    <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Clear Time</h3><div class="input-group"><label for="clear-time">Clear Time (seconds)</label><input type="number" id="clear-time" class="input-field" value="0" min="0"></div></div>
-                    <div class="card bg-blue-900/50 border-blue-700"><h3 class="text-xl font-semibold text-white mb-4">Results</h3><div class="output-group !bg-transparent"><span class="output-label">XP / Hour</span><span id="result-xp" class="output-value text-green-400"></span></div><div class="output-group !bg-transparent"><span class="output-label">Ore / Hour</span><span id="result-ore" class="output-value text-green-400"></span></div><div class="output-group !bg-transparent"><span class="output-label">Coins / Hour</span><span id="result-coins" class="output-value text-green-400"></span></div><div class="output-group !bg-transparent"><span class="output-label">Clears / Hour</span><span id="result-clears" class="output-value text-green-400"></span></div></div>
-                </div>
+            
+            <!-- A single grid container to manage the layout across all screen sizes -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Card 1: World Selection -->
+                <div class="card"><h3 class="text-xl font-semibold text-white mb-4">World Selection</h3><div class="input-group"><label for="difficulty-select">Difficulty</label><select id="difficulty-select" class="input-field"></select></div><div class="input-group"><label for="world-select">World</label><select id="world-select" class="input-field"></select></div></div>
+                
+                <!-- Card 2: Base Stats -->
+                <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Base Stats</h3><div class="output-group !bg-gray-800"><span class="output-label">XP / Clear</span><span id="base-xp" class="output-value"></span></div><div class="output-group !bg-gray-800"><span class="output-label">Ore / Drop</span><span id="base-ore" class="output-value"></span></div><div class="output-group !bg-gray-800"><span class="output-label">Coins / Clear</span><span id="base-coins" class="output-value"></span></div></div>
+                
+                <!-- Card 3: Clear Time -->
+                <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Clear Time</h3><div class="input-group"><label for="clear-time">Clear Time (seconds)</label><input type="number" id="clear-time" class="input-field" value="0" min="0"></div></div>
+
+                <!-- Card 4: Drop Buff Adjustment -->
+                <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Drop Buff Adjustment</h3><div class="input-group"><label for="exp-gain-rate">Exp Gain Rate (%)</label><input type="number" id="exp-gain-rate" class="input-field" value="100" min="100"></div><div class="input-group"><label for="ore-drop-rate">Ore Drop Rate (%)</label><input type="number" id="ore-drop-rate" class="input-field" value="100" min="100"></div><div class="input-group"><label for="gold-drop-rate">Gold Drop Rate (%)</label><input type="number" id="gold-drop-rate" class="input-field" value="100" min="100"></div></div>
+
+                <!-- Card 5: Extra Drop Adjustment -->
+                <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Extra Drop Adjustment</h3><div class="input-group"><label for="exp-extra-drop">Exp Extra Drop</label><input type="number" id="exp-extra-drop" class="input-field" value="0" min="0"></div><div class="input-group"><label for="gold-extra-drop">Gold Extra Drop</label><input type="number" id="gold-extra-drop" class="input-field" value="0" min="0"></div></div>
+                
+                <!-- Card 6: Results -->
+                <div class="card bg-blue-900/50 border-blue-700"><h3 class="text-xl font-semibold text-white mb-4">Results</h3><div class="output-group !bg-transparent"><span class="output-label">XP / Hour</span><span id="result-xp" class="output-value text-green-400"></span></div><div class="output-group !bg-transparent"><span class="output-label">Ore / Hour</span><span id="result-ore" class="output-value text-green-400"></span></div><div class="output-group !bg-transparent"><span class="output-label">Coins / Hour</span><span id="result-coins" class="output-value text-green-400"></span></div><div class="output-group !bg-transparent"><span class="output-label">Clears / Hour</span><span id="result-clears" class="output-value text-green-400"></span></div></div>
+
             </div>
         </div>
     </main>
@@ -236,8 +248,8 @@
             }
 
             function setActiveLink(linkToActivate) {
-                navLinks.forEach(link => link.classList.remove('active', 'bg-gray-700', 'text-white'));
-                linkToActivate.classList.add('active', 'bg-gray-700', 'text-white');
+                navLinks.forEach(link => link.classList.remove('active'));
+                linkToActivate.classList.add('active');
             }
 
             navWingCalculator.addEventListener('click', () => { showPage(pageWingCalculator); setActiveLink(navWingCalculator); });
@@ -386,7 +398,7 @@
             
             function calculateWorldRates() {
                 const worldId = document.getElementById('world-select').value;
-                if (!worldId) return;
+                if (!worldId || !worldStats[worldId]) return;
 
                 const stats = worldStats[worldId];
                 const expGainRate = parseFloat(document.getElementById('exp-gain-rate').value) / 100 || 1;
@@ -417,12 +429,14 @@
                 const difficulty = document.getElementById('difficulty-select').value;
                 const worldSelect = document.getElementById('world-select');
                 worldSelect.innerHTML = '';
-                worldData[difficulty].forEach(world => {
-                    const option = document.createElement('option');
-                    option.value = world.id;
-                    option.textContent = world.name;
-                    worldSelect.appendChild(option);
-                });
+                if (worldData[difficulty]) {
+                    worldData[difficulty].forEach(world => {
+                        const option = document.createElement('option');
+                        option.value = world.id;
+                        option.textContent = world.name;
+                        worldSelect.appendChild(option);
+                    });
+                }
                 calculateWorldRates();
             }
             
@@ -435,7 +449,9 @@
                     difficultySelect.appendChild(option);
                 });
                 difficultySelect.addEventListener('change', populateWorlds);
-                worldCalcInputs.forEach(input => input.addEventListener('input', calculateWorldRates));
+                worldCalcInputs.forEach(input => {
+                    if(input) input.addEventListener('input', calculateWorldRates)
+                });
                 populateWorlds();
             }
             
@@ -455,6 +471,8 @@
                 const selects = [atbmRaritySelect, coeffRaritySelect];
                 selects.forEach(select => {
                     if (!select) return;
+                    // Clear existing options before populating
+                    select.innerHTML = '';
                     for (const key in wingRarityData) {
                         const option = document.createElement('option');
                         option.value = key;
@@ -499,9 +517,13 @@
             }
 
             const atbmInputs = [atbmCoeffInput, atbmLevelInput, atbmRaritySelect];
-            atbmInputs.forEach(input => input.addEventListener('input', calculateATBM));
+            atbmInputs.forEach(input => {
+                if(input) input.addEventListener('input', calculateATBM)
+            });
             const coeffInputs = [coeffPercentInput, coeffLevelInput, coeffRaritySelect];
-            coeffInputs.forEach(input => input.addEventListener('input', calculateCoefficient));
+            coeffInputs.forEach(input => {
+                if(input) input.addEventListener('input', calculateCoefficient)
+            });
             
             // Initialize all calculators
             populateWingRaritySelects();
