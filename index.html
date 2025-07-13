@@ -246,15 +246,48 @@
                 
                 <div class="card"><h3 class="text-xl font-semibold text-white mb-4">World Selection</h3><div class="input-group"><label for="difficulty-select">Difficulty</label><select id="difficulty-select" class="input-field"></select></div><div class="input-group"><label for="world-select">World</label><select id="world-select" class="input-field"></select></div></div>
                 
-                <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Base Stats</h3><div class="output-group !bg-gray-800"><span class="output-label">XP / Clear</span><span id="base-xp" class="output-value"></span></div><div class="output-group !bg-gray-800"><span class="output-label">Ore / Drop</span><span id="base-ore" class="output-value"></span></div><div class="output-group !bg-gray-800"><span class="output-label">Coins / Clear</span><span id="base-coins" class="output-value"></span></div></div>
+                <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Base Stats</h3><div class="output-group !bg-gray-800"><span class="output-label">Exp / Clear</span><span id="base-xp" class="output-value"></span></div><div class="output-group !bg-gray-800"><span class="output-label">Ore / Drop</span><span id="base-ore" class="output-value"></span></div><div class="output-group !bg-gray-800"><span class="output-label">Gold / Clear</span><span id="base-coins" class="output-value"></span></div></div>
                 
                 <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Clear Time</h3><div class="input-group"><label for="clear-time">Clear Time (seconds)</label><input type="number" id="clear-time" class="input-field" value="0" min="0"></div></div>
 
-                <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Drop Buff Adjustment</h3><div class="input-group"><label for="exp-gain-rate">Exp Gain Rate (%)</label><input type="number" id="exp-gain-rate" class="input-field" value="100" min="100"></div><div class="input-group"><label for="ore-drop-rate">Ore Drop Rate (%)</label><input type="number" id="ore-drop-rate" class="input-field" value="100" min="100"></div><div class="input-group"><label for="gold-drop-rate">Gold Drop Rate (%)</label><input type="number" id="gold-drop-rate" class="input-field" value="100" min="100"></div></div>
+                <div class="card">
+                  
+                  <h3 class="text-xl font-semibold text-white mb-4">Drop Buff Adjustment</h3>
+                  
+                  <div class="input-group">
+                    <label for="gold-drop-rate">Gold Drop Rate (%)</label>
+                    <input type="number" id="gold-drop-rate" class="input-field" value="100" min="100">
+                  </div>
+                  
+                  <div class="input-group">
+                    <label for="ore-drop-rate">Ore Drop Rate (%)</label>
+                    <input type="number" id="ore-drop-rate" class="input-field" value="100" min="100">
+                  </div>
+                  
+                  <div class="input-group">
+                    <label for="exp-gain-rate">Exp Gain Rate (%)</label>
+                    <input type="number" id="exp-gain-rate" class="input-field" value="100" min="100">
+                  </div>
+                  
+                </div>
 
-                <div class="card"><h3 class="text-xl font-semibold text-white mb-4">Extra Drop Adjustment</h3><div class="input-group"><label for="exp-extra-drop">Exp Extra Drop</label><input type="number" id="exp-extra-drop" class="input-field" value="0" min="0"></div><div class="input-group"><label for="gold-extra-drop">Gold Extra Drop</label><input type="number" id="gold-extra-drop" class="input-field" value="0" min="0"></div></div>
+                <div class="card">
+                  
+                  <h3 class="text-xl font-semibold text-white mb-4">Extra Drop Adjustment</h3>
+                  
+                  <div class="input-group">
+                    <label for="gold-extra-drop">Extra Gold Drop</label>
+                    <input type="number" id="gold-extra-drop" class="input-field" value="0" min="0">
+                  </div>
+                  
+                  <div class="input-group">
+                    <label for="exp-extra-drop">Extra Exp Drop</label>
+                    <input type="number" id="exp-extra-drop" class="input-field" value="0" min="0">
+                  </div>
+                  
+                </div>
                 
-                <div class="card bg-blue-900/50 border-blue-700"><h3 class="text-xl font-semibold text-white mb-4">Results</h3><div class="output-group !bg-transparent"><span class="output-label">XP / Hour</span><span id="result-xp" class="output-value text-green-400"></span></div><div class="output-group !bg-transparent"><span class="output-label">Ore / Hour</span><span id="result-ore" class="output-value text-green-400"></span></div><div class="output-group !bg-transparent"><span class="output-label">Coins / Hour</span><span id="result-coins" class="output-value text-green-400"></span></div><div class="output-group !bg-transparent"><span class="output-label">Clears / Hour</span><span id="result-clears" class="output-value text-green-400"></span></div><div class="mt-4 text-center"><button id="compare-btn" class="btn btn-primary w-full">Add to Compare</button></div></div>
+                <div class="card bg-blue-900/50 border-blue-700"><h3 class="text-xl font-semibold text-white mb-4">Results</h3><div class="output-group !bg-transparent"><span class="output-label">Exp / Hour</span><span id="result-xp" class="output-value text-green-400"></span></div><div class="output-group !bg-transparent"><span class="output-label">Ore / Hour</span><span id="result-ore" class="output-value text-green-400"></span></div><div class="output-group !bg-transparent"><span class="output-label">Gold / Hour</span><span id="result-coins" class="output-value text-green-400"></span></div><div class="output-group !bg-transparent"><span class="output-label">Clears / Hour</span><span id="result-clears" class="output-value text-green-400"></span></div><div class="mt-4 text-center"><button id="compare-btn" class="btn btn-primary w-full">Add to Compare</button></div></div>
 
                 <!-- World Compare Card -->
                 <div class="card md:col-span-2 lg:col-span-3">
@@ -496,9 +529,9 @@
                     <thead>
                         <tr>
                             <th>World</th>
-                            <th>XP/Hour</th>
+                            <th>Exp/Hour</th>
                             <th>Ore/Hour</th>
-                            <th>Coins/Hour</th>
+                            <th>Gold/Hour</th>
                             <th>Clears/Hour</th>
                             <th>Clear Time</th>
                         </tr>
