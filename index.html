@@ -166,9 +166,28 @@
         .compare-table td {
             color: #d1d5db;
         }
+        #auth-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+        }
+        .auth-info {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
     </style>
 </head>
 <body class="bg-gray-900">
+
+    <!-- Auth Container -->
+    <div id="auth-container">
+        <div id="user-info" class="hidden items-center gap-2">
+            <span id="user-id" class="auth-info"></span>
+            <button id="logout-btn" class="btn btn-danger btn-sm">Logout</button>
+        </div>
+        <button id="login-btn" class="btn btn-primary">Login</button>
+    </div>
 
     <!-- Sidebar btn -->
     <button id="sidebar-toggle" type="button" class="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-400 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 fixed top-2 left-2 z-50">
@@ -194,6 +213,10 @@
             <a id="nav-world-calculator" class="sidebar-link">
                 <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>
                 <span>World Calculator</span>
+            </a>
+            <a id="nav-marketplace" class="sidebar-link">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.25a.75.75 0 01-.75-.75V10.5a.75.75 0 01.75-.75h19.5a.75.75 0 01.75.75v9.75a.75.75 0 01-.75.75h-4.5m-4.5 0H9m-3.75 0H5.25m3.75 0h3.75M21 10.5v-3.375A1.875 1.875 0 0019.125 5.25h-3.375" /></svg>
+                <span>Marketplace</span>
             </a>
 
             <!-- Social Links Section -->
@@ -303,20 +326,102 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Marketplace Page -->
+        <div id="page-marketplace" class="hidden container mx-auto p-4 md:p-8 max-w-7xl">
+            <header class="text-center mb-8"><h1 class="text-3xl md:text-4xl font-bold text-white">Marketplace</h1><p class="text-gray-400 mt-2">Buy and sell items with other players.</p></header>
+            
+            <!-- Add Item Form -->
+            <div id="add-item-container" class="card mb-8 hidden">
+                <h2 class="text-2xl font-bold text-white border-b border-gray-600 pb-3 mb-4">Add New Item</h2>
+                <form id="add-item-form">
+                    <div class="input-group">
+                        <label for="item-name">Item Name</label>
+                        <input type="text" id="item-name" class="input-field" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="item-description">Description</label>
+                        <textarea id="item-description" class="input-field" rows="3"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="item-price">Price (Gold)</label>
+                        <input type="number" id="item-price" class="input-field" required min="0">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Add Item</button>
+                </form>
+            </div>
+
+            <!-- Marketplace Items -->
+            <div>
+                <h2 class="text-2xl font-bold text-white mb-4">Items for Sale</h2>
+                <div id="marketplace-items" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Items will be loaded here from Firestore -->
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script type="module">
-        document.addEventListener('DOMContentLoaded', () => {
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, onSnapshot, doc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            
+            // =================================================================================
+            // PASTE YOUR FIREBASE CONFIGURATION HERE
+            // =================================================================================
+            // 1. Go to your Firebase project console.
+            // 2. In the left-hand menu, click on the gear icon > Project settings.
+            // 3. In the "Your apps" card, select the web app.
+            // 4. Click on "Config" to see the firebaseConfig object.
+            // 5. Copy the object and paste it here.
+            const firebaseConfig = {
+                apiKey: "AIzaSyCGGtp17IbjcFIi2BIyG32vjm_pUjTyQjY",
+                authDomain: "logintest-c606a.firebaseapp.com",
+                projectId: "logintest-c606a",
+                storageBucket: "logintest-c606a.firebasestorage.app",
+                messagingSenderId: "511604552692",
+                appId: "1:511604552692:web:6a6593deef940e50ac3fa1",
+                measurementId: "G-RNX7K9TCJH"
+            };
+            // =================================================================================
+            
+            let app, auth, db;
+            try {
+                // Check if the config has been filled
+                if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+                    throw new Error("Firebase config is not set. Please update it in the HTML file.");
+                }
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+            } catch (e) {
+                console.error("Firebase initialization failed:", e);
+                // Display a more user-friendly error on the page
+                document.body.innerHTML = `<div class="text-red-400 bg-gray-800 rounded-lg shadow-lg text-center p-8 max-w-lg mx-auto mt-20">
+                    <h1 class="text-2xl font-bold mb-4">Koneksi Gagal</h1>
+                    <p class="text-gray-300">Tidak dapat terhubung ke Firebase. Pastikan Anda telah memasukkan konfigurasi Firebase yang benar di dalam file HTML.</p>
+                    <p class="text-gray-500 text-sm mt-4">Error: ${e.message}</p>
+                    </div>`;
+                return;
+            }
+
             // --- Page Navigation Logic ---
             const navWingCalculator = document.getElementById('nav-wing-calculator');
             const navElixirCalculator = document.getElementById('nav-elixir-calculator');
             const navWorldCalculator = document.getElementById('nav-world-calculator');
+            const navMarketplace = document.getElementById('nav-marketplace');
+            
             const pageWingCalculator = document.getElementById('page-wing-calculator');
             const pageElixirCalculator = document.getElementById('page-elixir-calculator');
             const pageWorldCalculator = document.getElementById('page-world-calculator');
+            const pageMarketplace = document.getElementById('page-marketplace');
             
-            const navLinks = [navWingCalculator, navElixirCalculator, navWorldCalculator];
-            const pages = [pageWingCalculator, pageElixirCalculator, pageWorldCalculator];
+            const navLinks = [navWingCalculator, navElixirCalculator, navWorldCalculator, navMarketplace];
+            const pages = [pageWingCalculator, pageElixirCalculator, pageWorldCalculator, pageMarketplace];
 
             function showPage(pageToShow) {
                 pages.forEach(page => page.classList.add('hidden'));
@@ -331,6 +436,7 @@
             navWingCalculator.addEventListener('click', () => { showPage(pageWingCalculator); setActiveLink(navWingCalculator); });
             navElixirCalculator.addEventListener('click', () => { showPage(pageElixirCalculator); setActiveLink(navElixirCalculator); });
             navWorldCalculator.addEventListener('click', () => { showPage(pageWorldCalculator); setActiveLink(navWorldCalculator); });
+            navMarketplace.addEventListener('click', () => { showPage(pageMarketplace); setActiveLink(navMarketplace); });
 
             // --- Sidebar Toggle Logic ---
             const sidebar = document.getElementById('sidebar');
@@ -342,6 +448,148 @@
             };
             toggleBtn.addEventListener('click', toggleSidebar);
             overlay.addEventListener('click', toggleSidebar);
+            
+            // --- Authentication Logic ---
+            const loginBtn = document.getElementById('login-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const userInfoDiv = document.getElementById('user-info');
+            const userIdSpan = document.getElementById('user-id');
+            const addItemContainer = document.getElementById('add-item-container');
+
+            onAuthStateChanged(auth, user => {
+                if (user) {
+                    // User is signed in
+                    loginBtn.classList.add('hidden');
+                    userInfoDiv.classList.remove('hidden');
+                    userInfoDiv.classList.add('flex');
+                    userIdSpan.textContent = `UID: ${user.uid}`;
+                    addItemContainer.classList.remove('hidden');
+                    initMarketplace(); // Initialize marketplace features for logged-in user
+                } else {
+                    // User is signed out
+                    loginBtn.classList.remove('hidden');
+                    userInfoDiv.classList.add('hidden');
+                    userInfoDiv.classList.remove('flex');
+                    userIdSpan.textContent = '';
+                    addItemContainer.classList.add('hidden');
+                    initMarketplace(); // Still show items, but disable user-specific actions
+                }
+            });
+
+            loginBtn.addEventListener('click', async () => {
+                try {
+                    await signInAnonymously(auth);
+                    console.log("Signed in anonymously successfully");
+                } catch (error) {
+                    console.error("Error signing in anonymously: ", error);
+                }
+            });
+
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    await signOut(auth);
+                    console.log("Signed out successfully");
+                } catch (error) {
+                    console.error("Error signing out: ", error);
+                }
+            });
+
+
+            // --- Marketplace Logic ---
+            const marketplaceItemsContainer = document.getElementById('marketplace-items');
+            const addItemForm = document.getElementById('add-item-form');
+            let marketplaceUnsubscribe = null; // To hold the listener unsubscribe function
+
+            if(addItemForm) {
+                addItemForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const user = auth.currentUser;
+                    if (!user) {
+                        alert("You must be logged in to add an item.");
+                        return;
+                    }
+
+                    const itemName = document.getElementById('item-name').value;
+                    const itemDescription = document.getElementById('item-description').value;
+                    const itemPrice = document.getElementById('item-price').value;
+
+                    try {
+                        await addDoc(collection(db, "marketplace"), {
+                            name: itemName,
+                            description: itemDescription,
+                            price: Number(itemPrice),
+                            sellerId: user.uid,
+                            createdAt: serverTimestamp()
+                        });
+                        addItemForm.reset();
+                    } catch (error) {
+                        console.error("Error adding document: ", error);
+                    }
+                });
+            }
+
+            function initMarketplace() {
+                // Unsubscribe from any previous listener
+                if (marketplaceUnsubscribe) {
+                    marketplaceUnsubscribe();
+                }
+
+                const q = query(collection(db, "marketplace"));
+                
+                marketplaceUnsubscribe = onSnapshot(q, (querySnapshot) => {
+                    const items = [];
+                    querySnapshot.forEach((doc) => {
+                        items.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderMarketplaceItems(items);
+                }, (error) => {
+                    console.error("Error fetching marketplace items:", error);
+                });
+            }
+
+            function renderMarketplaceItems(items) {
+                if (!marketplaceItemsContainer) return;
+                marketplaceItemsContainer.innerHTML = '';
+                const user = auth.currentUser;
+
+                if (items.length === 0) {
+                    marketplaceItemsContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center">No items for sale right now.</p>';
+                    return;
+                }
+
+                items.forEach(item => {
+                    const itemCard = document.createElement('div');
+                    itemCard.className = 'card';
+                    
+                    const canDelete = user && user.uid === item.sellerId;
+
+                    itemCard.innerHTML = `
+                        <h3 class="text-xl font-bold text-white">${item.name}</h3>
+                        <p class="text-gray-400 my-2">${item.description || 'No description.'}</p>
+                        <div class="output-group mt-4">
+                            <span class="output-label">Price</span>
+                            <span class="output-value">${item.price.toLocaleString('id-ID')} Gold</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2 truncate" title="Seller: ${item.sellerId}">Seller: ${item.sellerId}</p>
+                        ${canDelete ? `<button data-id="${item.id}" class="btn btn-danger w-full mt-4 delete-item-btn">Delete</button>` : ''}
+                    `;
+                    marketplaceItemsContainer.appendChild(itemCard);
+                });
+
+                // Add event listeners for delete buttons
+                document.querySelectorAll('.delete-item-btn').forEach(button => {
+                    button.addEventListener('click', async (e) => {
+                        const itemId = e.target.dataset.id;
+                        try {
+                            await deleteDoc(doc(db, "marketplace", itemId));
+                            console.log("Item deleted successfully");
+                        } catch (error) {
+                            console.error("Error deleting item:", error);
+                        }
+                    });
+                });
+            }
+
 
             // --- Elixir Calculator Logic ---
             const elixirData = {
@@ -419,7 +667,7 @@
 
                 elixirData.rarities.forEach(rarity => {
                     const checkbox = document.getElementById(`elixir-check-${rarity.id}`);
-                    if (checkbox.checked) {
+                    if (checkbox && checkbox.checked) {
                         elixirData.stats.forEach(stat => {
                             const input = document.getElementById(`elixir-qty-${rarity.id}-${stat.id}`);
                             const quantity = parseInt(input.value) || 0;
@@ -432,14 +680,16 @@
                 elixirData.stats.forEach(stat => {
                     // Update Point Totals
                     const totalEl = document.getElementById(`elixir-total-${stat.id}`);
-                    totalEl.textContent = pointTotals[stat.id].toLocaleString('id-ID');
+                    if(totalEl) totalEl.textContent = pointTotals[stat.id].toLocaleString('id-ID');
                     
                     // Update Absorb Stat Totals
                     const absorbTotalEl = document.getElementById(`elixir-absorb-total-${stat.id}`);
-                    if (stat.isPercentage) {
-                        absorbTotalEl.textContent = `${(absorbTotals[stat.id]).toFixed(stat.decimals)}%`;
-                    } else {
-                        absorbTotalEl.textContent = formatStatNumber(absorbTotals[stat.id]);
+                    if(absorbTotalEl) {
+                        if (stat.isPercentage) {
+                            absorbTotalEl.textContent = `${(absorbTotals[stat.id] * 100).toFixed(stat.decimals)}%`;
+                        } else {
+                            absorbTotalEl.textContent = formatStatNumber(absorbTotals[stat.id]);
+                        }
                     }
                 });
             }
@@ -510,14 +760,16 @@
                 elixirData.rarities.forEach(rarity => {
                     const checkbox = document.getElementById(`elixir-check-${rarity.id}`);
                     const section = document.getElementById(`elixir-section-${rarity.id}`);
-                    checkbox.addEventListener('change', () => {
-                        section.classList.toggle('hidden', !checkbox.checked);
-                        calculateElixirTotals();
-                    });
+                    if(checkbox) {
+                        checkbox.addEventListener('change', () => {
+                            section.classList.toggle('hidden', !checkbox.checked);
+                            calculateElixirTotals();
+                        });
+                    }
 
                     elixirData.stats.forEach(stat => {
                         const input = document.getElementById(`elixir-qty-${rarity.id}-${stat.id}`);
-                        input.addEventListener('input', calculateElixirTotals);
+                        if(input) input.addEventListener('input', calculateElixirTotals);
                     });
                 });
 
@@ -570,7 +822,9 @@
             }
 
             function populateWorlds() {
-                const difficulty = document.getElementById('difficulty-select').value;
+                const difficultySelect = document.getElementById('difficulty-select');
+                if(!difficultySelect) return;
+                const difficulty = difficultySelect.value;
                 const worldSelect = document.getElementById('world-select');
                 worldSelect.innerHTML = '';
                 if (worldData[difficulty]) {
@@ -586,6 +840,7 @@
 
             function renderCompareTable() {
                 const container = document.getElementById('compare-container');
+                if (!container) return;
                 if (comparisonData.length === 0) {
                     container.innerHTML = '<p class="text-gray-500 mt-4 text-center">Add worlds to compare their rates.</p>';
                     return;
@@ -664,8 +919,11 @@
                     if(input) input.addEventListener('input', calculateWorldRates)
                 });
                 
-                document.getElementById('compare-btn').addEventListener('click', addToCompare);
-                document.getElementById('clear-compare-btn').addEventListener('click', clearCompare);
+                const compareBtn = document.getElementById('compare-btn');
+                if(compareBtn) compareBtn.addEventListener('click', addToCompare);
+
+                const clearCompareBtn = document.getElementById('clear-compare-btn');
+                if(clearCompareBtn) clearCompareBtn.addEventListener('click', clearCompare);
 
                 populateWorlds();
                 renderCompareTable();
