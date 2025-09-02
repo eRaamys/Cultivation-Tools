@@ -434,14 +434,21 @@
             const absorbTotalsContainer = document.getElementById('elixir-absorb-totals-container');
 
             function formatStatNumber(num) {
-                if (num >= 1000000) {
-                    return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-                }
-                if (num >= 1000) {
-                    return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-                }
-                return num.toLocaleString('id-ID');
-            }
+                // Check for Billions first
+                if (num >= 1000000000) {
+                    return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+                }
+                // Then check for Millions
+                if (num >= 1000000) {
+                    return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+                }
+                // Then check for Thousands
+                if (num >= 1000) {
+                    return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+                }
+                // Otherwise, return the number as is with locale formatting
+                return num.toLocaleString('id-ID');
+            }
 
             function calculateElixirTotals() {
                 const pointTotals = {};
@@ -465,8 +472,8 @@
 
                 elixirData.stats.forEach(stat => {
                     // Update Point Totals
-                    const totalEl = document.getElementById(`elixir-total-${stat.id}`);
-                    totalEl.textContent = pointTotals[stat.id].toLocaleString('id-ID');
+                    const totalEl = document.getElementById(`elixir-total-${stat.id}`);
+                    totalEl.textContent = formatStatNumber(pointTotals[stat.id]);
                     
                     // Update Absorb Stat Totals
                     const absorbTotalEl = document.getElementById(`elixir-absorb-total-${stat.id}`);
